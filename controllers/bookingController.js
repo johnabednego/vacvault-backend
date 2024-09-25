@@ -28,7 +28,7 @@ exports.createBooking = async (req, res) => {
 
     // Send success email
     const user = req.user; // Assuming req.user contains authenticated user info
-    await sendEmail(user.email, 'Booking Created', `Your booking has been successfully created. Booking ID: ${booking.booking_id}`);
+    await sendEmail(user.email, 'Booking Created', `Your booking has been successfully created.`);
 
     res.status(201).json({ success: true, data: booking });
   } catch (error) {
@@ -46,7 +46,6 @@ exports.uploadItemImage = async (req, res) => {
     if (!booking) return res.status(404).json({ msg: 'Booking not found' });
 
     const gridfsBucket = getGridfsBucket();
-
     // Check if there's a file to upload
     if (!req.file) return res.status(400).json({ msg: 'No file uploaded' });
 

@@ -9,6 +9,9 @@ const setupSwagger = require('./config/swagger'); // Add this import
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const itemRoutes = require('./routes/itemRoutes');
+const productRoutes = require('./routes/productRoutes');
+const shoppingRoutes = require('./routes/shoppingRoutes');
 
 const app = express();
 
@@ -33,10 +36,18 @@ setupSwagger(app); // Add Swagger setup here
 app.use('/api/auth', authRoutes);
 
 // User routes
-app.use('/api', userRoutes);
+app.use('/api/users', userRoutes);
 
 // Booking routes
 app.use('/api', bookingRoutes);
+
+// Item routes
+app.use('/api/items', itemRoutes);
+
+// Product routes
+app.use('/api/products', productRoutes);
+// Shoppings routes
+app.use('/api/shoppings', shoppingRoutes);
 
 // Test route
 app.get('/', (req, res) => {

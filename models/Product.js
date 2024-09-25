@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
-  product_id: {
-    type: Number,
-    unique: true,
-    required: true,
-    autoIncrement: true
-  },
   image: {
-    data: Buffer,
-    contentType: String,
-    required: true
+    data: {
+      type: Buffer,
+      required: true
+    },
+    contentType: {
+      type: String,
+      required: true
+    }
   },
   name: {
     type: String,

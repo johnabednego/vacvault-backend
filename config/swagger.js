@@ -57,6 +57,18 @@ const options = {
             vacvault_id: { type: 'string', description: 'Optional VacVault ID' },
           },
         },
+        Item: {  // New Item schema definition
+          type: 'object',
+          required: ['name', 'price'],
+          properties: {
+            item_id: { type: 'string', description: 'Unique item ID' },
+            name: { type: 'string', description: 'Name of the item' },
+            description: { type: 'string', description: 'Description of the item' },
+            price: { type: 'number', description: 'Price of the item' },
+            createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp' },
+            updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp' },
+          },
+        },
       },
     },
   },

@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
-  booking_id: {
-    type: Number,
-    unique: true,
-    required: true,
-    autoIncrement: true
-  },
   items: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item',

@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const ShoppingSchema = new mongoose.Schema({
-  shopping_id: {
-    type: Number,
-    unique: true,
-    required: true,
-    autoIncrement: true
-  },
   products: [{
     product: {
       type: mongoose.Schema.Types.ObjectId,
