@@ -3,7 +3,12 @@ const { connectDB } = require('./config/db');
 require('dotenv').config();
 const cors = require('cors');
 const { errorHandler } = require('./middlewares/errorHandler');
+const setupSwagger = require('./config/swagger'); // Add this import
 
+// Routes
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 const app = express();
 
@@ -21,6 +26,17 @@ app.use(cors({
 }));
 
 
+// Setup Swagger UI
+setupSwagger(app); // Add Swagger setup here
+
+// Auth Routes
+app.use('/api/auth', authRoutes);
+
+// User routes
+app.use('/api', userRoutes);
+
+// Booking routes
+app.use('/api', bookingRoutes);
 
 // Test route
 app.get('/', (req, res) => {

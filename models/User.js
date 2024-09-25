@@ -1,10 +1,29 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// Counter Schema for auto-incrementing vacvault_id
+const CounterSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  sequence_value: {
+    type: Number,
+    default: 0,
+  },
+});
+
+// Create Counter model
+const Counter = mongoose.model('Counter', CounterSchema);
+
 // User Schema
 const UserSchema = new mongoose.Schema({
-  vacvault_id: String,
-    first_name: {
+  vacvault_id: {
+    type: Number,
+    unique: true, // Ensure uniqueness
+  },
+  first_name: {
     type: String,
     required: true,
   },
@@ -22,7 +41,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function (v) {
-        // This will validate if the phone number has the international country code format
         return /\+\d{1,3}\d{10}/.test(v);
       },
       message: props => `${props.value} is not a valid phone number!`,
@@ -43,7 +61,7 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
     allowNull: false,
-    defaultValue: 'user', // Default role
+    default: 'user', // Default role
   },
   is_verified: {
     type: Boolean,
@@ -54,6 +72,19 @@ const UserSchema = new mongoose.Schema({
   reset_password_otp: String,
   reset_password_expires: Date,
 }, { timestamps: true });
+
+// Middleware to auto-increment vacvault_id before saving
+UserSchema.pre('save', async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findOneAndUpdate(
+      { name: 'vacvault_id' }, 
+      { $inc: { sequence_value: 1 } }, 
+      { new: true, upsert: true } // Create if not exists
+    );
+    this.vacvault_id = counter.sequence_value;
+  }
+  next();
+});
 
 // Hash password before saving
 UserSchema.pre('save', async function (next) {

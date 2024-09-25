@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { vacvault_id, first_name, last_name, email, phone_number, password, country, city, role } = req.body;
+  const {first_name, last_name, email, phone_number, password, country, city, role } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -31,7 +31,6 @@ exports.register = async (req, res) => {
     const email_verification_expires = Date.now() + 3600000; // 1 hour
 
     user = new User({
-      vacvault_id,
       first_name,
       last_name,
       email,
@@ -85,7 +84,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    const token = generateToken({ id: user._id, role: user.role });
+    const token = generateToken({ id: user._id, user: user });
 
     res.json({ token });
   } catch (err) {
@@ -174,9 +173,8 @@ exports.setNewPassword = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid or expired OTP' });
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    user.password = hashedPassword;
+    user.password = newPassword;
     user.reset_password_otp = null;
     user.reset_password_expires = null;
 
